@@ -31,7 +31,10 @@ const App = () => {
       return acc + current;
     }, 0);
     let newAverage = sum / newTotal;
-    setAllFeedbacks(newFeedbacks); 
+    let goodsAmount = newFeedbacks.filter((item) => item === 1).length;
+    let newPositive = (goodsAmount / newTotal) * 100;
+    setAllFeedbacks(newFeedbacks);
+    setPositive(newPositive);
     setAverage(newAverage);
     setTotal(newTotal);
     setGood(newGood);
@@ -45,7 +48,10 @@ const App = () => {
       return acc + current;
     }, 0);
     let newAverage = sum / newTotal;
-    setAllFeedbacks(newFeedbacks); 
+    let goodsAmount = newFeedbacks.filter((item) => item === 1).length;
+    let newPositive = (goodsAmount / newTotal) * 100;
+    setAllFeedbacks(newFeedbacks);
+    setPositive(newPositive);
     setAverage(newAverage);
     setTotal(newTotal);
     setNeutral(newNeutral);
@@ -59,7 +65,10 @@ const App = () => {
       return acc + current;
     }, 0);
     let newAverage = sum / newTotal;
-    setAllFeedbacks(newFeedbacks); 
+    let goodsAmount = newFeedbacks.filter((item) => item === 1).length;
+    let newPositive = (goodsAmount / newTotal) * 100;
+    setAllFeedbacks(newFeedbacks);
+    setPositive(newPositive);
     setAverage(newAverage);
     setTotal(newTotal);
     setBad(newBad);
