@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import personService from "./services/Persons";
 import Form from "./components/Form";
 import Filter from "./components/Filter";
 import Persons from "./components/Persons";
 
 const App = () => {
-  const initialPersons = [
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ];
-  const [persons, setPersons] = useState(initialPersons);
+  const [persons, setPersons] = useState([]);
+  const [filteredPersons, setFilteredPersons] = useState([]);
+  const [showAll, setShowAll] = useState(true);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+
+  useEffect(() => {
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
+    });
+  }, []);
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -28,11 +32,29 @@ const App = () => {
       person.name.toLowerCase().includes(filter.toLowerCase())
     );
 
-    if (filter) {
-      setPersons(filterResult);
-    } else {
-      setPersons(initialPersons);
+    setFilteredPersons(filter === "" ? [] : filterResult);
+    setShowAll(filter === "" ? true : false);
+  };
+
+  const handleDelete = (id) => {
+    const personToDelete = persons.find((person) => person.id === id);
+    if (!personToDelete) {
+      alert("Deleting person failed!");
+      return;
     }
+    const { name } = personToDelete;
+
+    window.confirm(`Delete ${name}?`);
+    
+    personService
+      .deletePerson(id)
+      .then((res) => {
+        const updatedPersons = persons.filter((person) => person.id !== id);
+        setPersons(updatedPersons);
+      })
+      .catch(() => {
+        alert("Deleting the person failed!");
+      });
   };
 
   const handleSubmit = (event) => {
@@ -49,10 +71,19 @@ const App = () => {
       number: newNumber,
     };
 
-    setPersons(persons.concat(newPerson));
-    setNewName("");
-    setNewNumber("");
+    personService.create(newPerson).then((res) => {
+      setPersons(persons.concat(res));
+      setNewName("");
+      setNewNumber("");
+      event.target.reset();
+    });
   };
+
+  const showPersons = showAll ? (
+    <Persons persons={persons} handleDelete={handleDelete} />
+  ) : (
+    <Persons persons={filteredPersons} />
+  );
 
   return (
     <div>
@@ -64,7 +95,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      {showPersons}
     </div>
   );
 };
