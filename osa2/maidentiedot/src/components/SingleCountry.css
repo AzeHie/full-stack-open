@@ -1,0 +1,9 @@
+.singlecountry__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.singlecountry__flag {
+  width: 25%;
+  height: 25%;
+}
