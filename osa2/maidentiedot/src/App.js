@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="app-container">
       <Search handleSearchChange={handleSearchChange} />
       <CountryList filteredCountries={filteredCountries} showCountry={handleShowCountry} />
     </div>
